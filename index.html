@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>حميدة - محول النص إلى صوت</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --primary-dark: #564FC9;
+            --secondary: #FF6584;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --error: #F44336;
+            --dark: #2D3748;
+            --light: #F7FAFC;
+            --gray: #E2E8F0;
+            --text: #2D3748;
+            --text-light: #718096;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        header {
+            padding: 25px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 700;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-label i {
+            color: var(--primary);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--gray);
+            border-radius: 12px;
+            resize: vertical;
+            min-height: 120px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+        }
+
+        .custom-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--gray);
+            border-radius: 12px;
+            font-size: 1rem;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236C63FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 18px;
+        }
+
+        .slider-group {
+            margin: 20px 0;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .slider-value {
+            background: rgba(108, 99, 255, 0.1);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--primary);
+        }
+
+        .custom-slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--gray);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .custom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 20px;
+        }
+
+        .btn {
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e68a00;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #3d8b40;
+        }
+
+        .btn-error {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-error:hover {
+            background: #d32f2f;
+        }
+
+        .btn-download {
+            grid-column: span 2;
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-download:hover {
+            background: #e55c7c;
+        }
+
+        .progress-container {
+            padding: 0 20px 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--gray);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .timer {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .status {
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status i {
+            font-size: 1.2rem;
+        }
+
+        .status-text {
+            flex: 1;
+        }
+
+        .status.info {
+            color: var(--primary);
+        }
+
+        .status.success {
+            color: var(--success);
+        }
+
+        .status.warning {
+            color: var(--warning);
+        }
+
+        .status.error {
+            color: var(--error);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(108, 99, 255, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* تأثيرات الهاتف */
+        @media (max-width: 480px) {
+            .btn {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-download {
+                grid-column: span 1;
+            }
+        }
+
+        /* تأثيرات الاهتزاز */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-microphone-alt"></i>
+            </div>
+            <h1>حميدة</h1>
+            <p class="subtitle">محول النص إلى صوت بدقة عالية</p>
+        </header>
+        
+        <div class="card">
+            <label for="text-input" class="input-label">
+                <i class="fas fa-edit"></i> النص المراد تحويله
+            </label>
+            <textarea id="text-input" placeholder="اكتب النص هنا..."></textarea>
+        </div>
+        
+        <div class="card">
+            <label for="voice-select" class="input-label">
+                <i class="fas fa-user-voice"></i> اختر الصوت
+            </label>
+            <select id="voice-select" class="custom-select"></select>
+            
+            <div class="slider-group">
+                <label for="rate" class="slider-label">
+                    <span><i class="fas fa-tachometer-alt"></i> السرعة</span>
+                    <span id="rate-value" class="slider-value">1</span>
+                </label>
+                <input type="range" id="rate" min="0.5" max="2" step="0.1" value="1" class="custom-slider">
+            </div>
+            
+            <div class="slider-group">
+                <label for="pitch" class="slider-label">
+                    <span><i class="fas fa-waveform"></i> النبرة</span>
+                    <span id="pitch-value" class="slider-value">1</span>
+                </label>
+                <input type="range" id="pitch" min="0.5" max="2" step="0.1" value="1" class="custom-slider">
+            </div>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-bar"></div>
+            </div>
+            <div class="timer">
+                <span id="current-time">00:00</span>
+                <span id="total-time">00:00</span>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button id="play-btn" class="btn btn-primary">
+                <i class="fas fa-play"></i> تشغيل
+            </button>
+            <button id="pause-btn" class="btn btn-warning">
+                <i class="fas fa-pause"></i> إيقاف
+            </button>
+            <button id="resume-btn" class="btn btn-success">
+                <i class="fas fa-redo"></i> استئناف
+            </button>
+            <button id="stop-btn" class="btn btn-error">
+                <i class="fas fa-stop"></i> إلغاء
+            </button>
+            <div id="download-btn" class="btn btn-download">
+                <a href="hi.html">اضغط هنا لتجرب بعض الاشياء</a>
+            </div>
+            <button id="download-btn" class="btn btn-download">
+                <i class="fas fa-download"></i> تحميل الصوت
+            </button>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>جاري تحضير الملف للتحميل...</p>
+        </div>
+        
+        <div class="status info" id="status">
+            <i class="fas fa-info-circle"></i>
+            <span class="status-text">اكتب النص واضغط تشغيل لبدء التحويل</span>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // العناصر
+            const elements = {
+                textInput: document.getElementById('text-input'),
+                voiceSelect: document.getElementById('voice-select'),
+                playBtn: document.getElementById('play-btn'),
+                pauseBtn: document.getElementById('pause-btn'),
+                resumeBtn: document.getElementById('resume-btn'),
+                stopBtn: document.getElementById('stop-btn'),
+                downloadBtn: document.getElementById('download-btn'),
+                rateInput: document.getElementById('rate'),
+                pitchInput: document.getElementById('pitch'),
+                rateValue: document.getElementById('rate-value'),
+                pitchValue: document.getElementById('pitch-value'),
+                progressBar: document.getElementById('progress-bar'),
+                currentTime: document.getElementById('current-time'),
+                totalTime: document.getElementById('total-time'),
+                status: document.getElementById('status'),
+                statusText: document.querySelector('.status-text'),
+                statusIcon: document.querySelector('.status i'),
+                loading: document.getElementById('loading')
+            };
+
+            // المتغيرات
+            const synth = window.speechSynthesis;
+            let voices = [];
+            let isPlaying = false;
+            let isPaused = false;
+            let utterance = null;
+            let startTime = 0;
+            let estimatedDuration = 0;
+            let timer = null;
+            let audioChunks = [];
+            let mediaRecorder = null;
+            let audioContext = null;
+            let processor = null;
+            let audioStream = null;
+
+            // تحميل الأصوات
+            function loadVoices() {
+                voices = synth.getVoices();
+                elements.voiceSelect.innerHTML = '';
+                
+                const arabicVoices = voices.filter(v => v.lang.includes('ar'));
+                const englishVoices = voices.filter(v => v.lang.includes('en'));
+                
+                if (arabicVoices.length > 0) {
+                    const group = document.createElement('optgroup');
+                    group.label = 'الأصوات العربية';
+                    arabicVoices.forEach(v => {
+                        const option = document.createElement('option');
+                        option.value = v.name;
+                        option.textContent = `${v.name} (${v.lang})`;
+                        group.appendChild(option);
+                    });
+                    elements.voiceSelect.appendChild(group);
+                }
+                
+                if (englishVoices.length > 0) {
+                    const group = document.createElement('optgroup');
+                    group.label = 'English Voices';
+                    englishVoices.forEach(v => {
+                        const option = document.createElement('option');
+                        option.value = v.name;
+                        option.textContent = `${v.name} (${v.lang})`;
+                        group.appendChild(option);
+                    });
+                    elements.voiceSelect.appendChild(group);
+                }
+            }
+
+            // تحديث القيم
+            elements.rateInput.addEventListener('input', () => {
+                elements.rateValue.textContent = elements.rateInput.value;
+            });
+            
+            elements.pitchInput.addEventListener('input', () => {
+                elements.pitchValue.textContent = elements.pitchInput.value;
+            });
+
+            // التحكم في التشغيل
+            elements.playBtn.addEventListener('click', playText);
+            elements.pauseBtn.addEventListener('click', pauseSpeech);
+            elements.resumeBtn.addEventListener('click', resumeSpeech);
+            elements.stopBtn.addEventListener('click', stopSpeech);
+            elements.downloadBtn.addEventListener('click', downloadAudio);
+
+            // تشغيل النص
+            async function playText() {
+                if (!elements.textInput.value.trim()) {
+                    showStatus('الرجاء إدخال نص لتحويله', 'error');
+                    shakeElement(elements.textInput);
+                    return;
+                }
+                
+                try {
+                    if (isPlaying) stopSpeech();
+                    
+                    // بدء تسجيل الصوت
+                    await startRecording();
+                    
+                    utterance = new SpeechSynthesisUtterance(elements.textInput.value);
+                    const selectedVoice = voices.find(v => v.name === elements.voiceSelect.value);
+                    
+                    if (selectedVoice) utterance.voice = selectedVoice;
+                    utterance.rate = parseFloat(elements.rateInput.value);
+                    utterance.pitch = parseFloat(elements.pitchInput.value);
+                    
+                    // تقدير المدة
+                    estimatedDuration = estimateDuration(elements.textInput.value, utterance.rate);
+                    updateTimer(0, estimatedDuration);
+                    
+                    // الأحداث
+                    utterance.onstart = () => {
+                        isPlaying = true;
+                        isPaused = false;
+                        startTime = Date.now();
+                        startTimer();
+                        showStatus('جاري تحويل النص إلى صوت...', 'info');
+                        updateControls();
+                    };
+                    
+                    utterance.onend = () => {
+                        stopRecording();
+                        isPlaying = false;
+                        stopTimer();
+                        showStatus('تم التحويل بنجاح!', 'success');
+                        updateControls();
+                    };
+                    
+                    utterance.onerror = (e) => {
+                        stopRecording();
+                        isPlaying = false;
+                        stopTimer();
+                        showStatus(`حدث خطأ: ${e.error}`, 'error');
+                        updateControls();
+                    };
+                    
+                    utterance.onpause = () => {
+                        isPaused = true;
+                        stopTimer();
+                        updateControls();
+                    };
+                    
+                    utterance.onresume = () => {
+                        isPaused = false;
+                        startTimer();
+                        updateControls();
+                    };
+                    
+                    synth.speak(utterance);
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    showStatus('حدث خطأ في التشغيل', 'error');
+                }
+            }
+
+            // التحكم في الصوت
+            function pauseSpeech() {
+                if (isPlaying && !isPaused) {
+                    synth.pause();
+                }
+            }
+
+            function resumeSpeech() {
+                if (isPlaying && isPaused) {
+                    synth.resume();
+                }
+            }
+
+            function stopSpeech() {
+                if (isPlaying || isPaused) {
+                    synth.cancel();
+                    stopRecording();
+                    isPlaying = false;
+                    isPaused = false;
+                    stopTimer();
+                    showStatus('تم إيقاف التشغيل', 'warning');
+                    updateControls();
+                }
+            }
+
+            // تسجيل الصوت
+            async function startRecording() {
+                try {
+                    audioChunks = [];
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const dest = audioContext.createMediaStreamDestination();
+                    audioStream = dest.stream;
+                    
+                    processor = audioContext.createScriptProcessor(4096, 1, 1);
+                    processor.onaudioprocess = (e) => {
+                        if (isPlaying && !isPaused) {
+                            audioChunks.push(new Float32Array(e.inputBuffer.getChannelData(0)));
+                        }
+                    };
+                    
+                    const source = audioContext.createMediaStreamSource(audioStream);
+                    source.connect(processor);
+                    processor.connect(audioContext.destination);
+                    
+                } catch (error) {
+                    console.error('Recording error:', error);
+                    throw error;
+                }
+            }
+
+            function stopRecording() {
+                if (processor) processor.disconnect();
+                if (audioStream) audioStream.getTracks().forEach(t => t.stop());
+                if (audioContext && audioContext.state !== 'closed') audioContext.close();
+            }
+
+            // التحميل
+            async function downloadAudio() {
+                if (audioChunks.length === 0) {
+                    showStatus('لا يوجد صوت مسجل للتحميل', 'error');
+                    return;
+                }
+                
+                try {
+                    showLoading(true);
+                    
+                    // تحويل إلى WAV
+                    const wavBlob = await encodeWAV(audioChunks);
+                    const url = URL.createObjectURL(wavBlob);
+                    
+                    // اختبار الصوت
+                    const audioTest = new Audio(url);
+                    await audioTest.play();
+                    
+                    // التحميل
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `صوت-${new Date().toISOString().slice(0, 10)}.wav`;
+                    a.click();
+                    
+                    showStatus('تم تحميل الملف بنجاح', 'success');
+                    
+                } catch (error) {
+                    console.error('Download error:', error);
+                    showStatus('حدث خطأ في تحميل الملف', 'error');
+                } finally {
+                    showLoading(false);
+                }
+            }
+
+            // تحويل إلى WAV
+            function encodeWAV(chunks) {
+                return new Promise(resolve => {
+                    const bufferLength = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+                    const merged = new Float32Array(bufferLength);
+                    let offset = 0;
+                    
+                    chunks.forEach(chunk => {
+                        merged.set(chunk, offset);
+                        offset += chunk.length;
+                    });
+                    
+                    const buffer = new ArrayBuffer(44 + merged.length * 2);
+                    const view = new DataView(buffer);
+                    
+                    // رأس WAV
+                    writeString(view, 0, 'RIFF');
+                    view.setUint32(4, 36 + merged.length * 2, true);
+                    writeString(view, 8, 'WAVE');
+                    writeString(view, 12, 'fmt ');
+                    view.setUint32(16, 16, true);
+                    view.setUint16(20, 1, true);
+                    view.setUint16(22, 1, true);
+                    view.setUint32(24, 44100, true);
+                    view.setUint32(28, 44100 * 2, true);
+                    view.setUint16(32, 2, true);
+                    view.setUint16(34, 16, true);
+                    writeString(view, 36, 'data');
+                    view.setUint32(40, merged.length * 2, true);
+                    
+                    // بيانات الصوت (مع تضخيم)
+                    let index = 44;
+                    for (let i = 0; i < merged.length; i++) {
+                        const sample = Math.max(-1, Math.min(1, merged[i] * 2.5)); // تضخيم الصوت
+                        view.setInt16(index, sample * 0x7FFF, true);
+                        index += 2;
+                    }
+                    
+                    resolve(new Blob([view], { type: 'audio/wav' }));
+                });
+            }
+
+            // وظائف مساعدة
+            function estimateDuration(text, rate) {
+                const words = text.split(/\s+/).length;
+                const wpm = 150 * rate;
+                return (words / wpm) * 60;
+            }
+
+            function startTimer() {
+                stopTimer();
+                startTime = Date.now();
+                timer = setInterval(updateProgress, 100);
+            }
+
+            function stopTimer() {
+                if (timer) clearInterval(timer);
+            }
+
+            function updateProgress() {
+                const elapsed = (Date.now() - startTime) / 1000;
+                const progress = Math.min(elapsed / estimatedDuration, 1);
+                
+                elements.progressBar.style.width = `${progress * 100}%`;
+                updateTimer(elapsed, estimatedDuration);
+            }
+
+            function updateTimer(current, total) {
+                const format = (sec) => {
+                    const mins = Math.floor(sec / 60);
+                    const secs = Math.floor(sec % 60);
+                    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                };
+                
+                elements.currentTime.textContent = format(current);
+                elements.totalTime.textContent = format(total);
+            }
+
+            function updateControls() {
+                elements.playBtn.disabled = isPlaying && !isPaused;
+                elements.pauseBtn.disabled = !isPlaying || isPaused;
+                elements.resumeBtn.disabled = !isPaused;
+                elements.stopBtn.disabled = !isPlaying && !isPaused;
+                elements.downloadBtn.disabled = isPlaying || audioChunks.length === 0;
+            }
+
+            function showStatus(message, type) {
+                elements.statusText.textContent = message;
+                elements.status.className = `status ${type}`;
+                elements.statusIcon.className = type === 'error' ? 'fas fa-exclamation-circle' :
+                                              type === 'warning' ? 'fas fa-exclamation-triangle' :
+                                              type === 'success' ? 'fas fa-check-circle' :
+                                              'fas fa-info-circle';
+            }
+
+            function showLoading(show) {
+                elements.loading.style.display = show ? 'block' : 'none';
+            }
+
+            function shakeElement(element) {
+                element.classList.add('shake');
+                setTimeout(() => element.classList.remove('shake'), 500);
+            }
+
+            function writeString(view, offset, string) {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            }
+
+            // تهيئة
+            synth.onvoiceschanged = loadVoices;
+            loadVoices();
+            updateControls();
+        });
+    </script>
+</body>
+</html>
