@@ -116,6 +116,16 @@
             background-repeat: no-repeat;
             background-position: right 12px center;
             background-size: 18px;
+            /* إصلاح مشكلة التمرير على الهاتف */
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            max-height: 200px;
+        }
+
+        /* تحسين مظهر الخيارات */
+        .custom-select option {
+            padding: 12px;
+            font-size: 1rem;
         }
 
         .slider-group {
@@ -228,6 +238,17 @@
             background: #e55c7c;
         }
 
+        .btn-link {
+            grid-column: span 2;
+            background: var(--primary-dark);
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-link:hover {
+            background: #4a45a5;
+        }
+
         .progress-container {
             padding: 0 20px 20px;
         }
@@ -319,8 +340,12 @@
                 grid-template-columns: 1fr;
             }
             
-            .btn-download {
+            .btn-download, .btn-link {
                 grid-column: span 1;
+            }
+            
+            .custom-select {
+                max-height: 150px;
             }
         }
 
@@ -399,9 +424,9 @@
             <button id="stop-btn" class="btn btn-error">
                 <i class="fas fa-stop"></i> إلغاء
             </button>
-            <div id="download-btn" class="btn btn-download">
-                <a href="hi.html">اضغط هنا لتجرب بعض الاشياء</a>
-            </div>
+            <a href="hi.html" class="btn btn-link">
+                <i class="fas fa-link"></i> تجربة أشياء أخرى
+            </a>
             <button id="download-btn" class="btn btn-download">
                 <i class="fas fa-download"></i> تحميل الصوت
             </button>
@@ -646,10 +671,6 @@
                     // تحويل إلى WAV
                     const wavBlob = await encodeWAV(audioChunks);
                     const url = URL.createObjectURL(wavBlob);
-                    
-                    // اختبار الصوت
-                    const audioTest = new Audio(url);
-                    await audioTest.play();
                     
                     // التحميل
                     const a = document.createElement('a');
